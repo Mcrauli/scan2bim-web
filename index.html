@@ -84,7 +84,7 @@ header{padding:96px 0 70px;position:relative}
   padding:7px 14px;border-radius:100px;margin-bottom:30px
 }
 .tag::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent)}
-header h1{font-size:clamp(44px,7.4vw,86px);font-weight:800;max-width:14ch}
+header h1{font-size:clamp(46px,8.2vw,94px);font-weight:800;max-width:13ch;letter-spacing:-.035em}
 header h1 em{font-style:normal;color:var(--accent);position:relative;white-space:nowrap}
 .sub{margin-top:26px;font-size:clamp(18px,2.3vw,22px);color:var(--muted);max-width:56ch}
 .cta{display:flex;gap:14px;margin-top:40px;flex-wrap:wrap}
@@ -117,19 +117,17 @@ section.alt{background:var(--bg-2);border-top:1px solid var(--line);border-botto
 .h2{font-size:clamp(32px,4.6vw,52px);font-weight:800;max-width:18ch}
 .lead{color:var(--muted);font-size:19px;max-width:62ch;margin-top:18px}
 
-/* WHY cards */
-.grid{display:grid;gap:18px;margin-top:48px}
-.grid-3{grid-template-columns:repeat(3,1fr)}
-.grid-2{grid-template-columns:repeat(2,1fr)}
-@media(max-width:860px){.grid-3,.grid-2{grid-template-columns:1fr}}
-.card{
-  background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
-  padding:30px 26px;transition:border-color .2s,transform .2s
+/* why — editorial rows, not a card grid */
+.why{margin-top:56px}
+.why-item{
+  padding:38px 0;border-top:1px solid var(--line);
+  display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:48px;align-items:baseline
 }
-.card:hover{border-color:var(--accent);transform:translateY(-3px)}
-.card .ic{font-family:"JetBrains Mono";font-size:13px;color:var(--accent);border:1px solid var(--line);border-radius:8px;width:fit-content;padding:5px 10px;margin-bottom:18px}
-.card h3{font-size:22px;font-weight:600}
-.card p{color:var(--muted);font-size:15.5px;margin-top:10px}
+.why-item:last-child{border-bottom:1px solid var(--line)}
+.why-item h3{font-size:clamp(27px,3.6vw,42px);font-weight:800;letter-spacing:-.025em;line-height:1.05}
+.why-item h3 em{font-style:normal;color:var(--accent)}
+.why-item p{color:var(--muted);font-size:16.5px;line-height:1.6;max-width:58ch;text-wrap:pretty}
+@media(max-width:760px){.why-item{grid-template-columns:1fr;gap:12px;padding:28px 0}}
 
 /* numbered step sequence (how-it-works) */
 .steps{margin-top:48px}
@@ -149,6 +147,7 @@ section.alt{background:var(--bg-2);border-top:1px solid var(--line);border-botto
 .ba .label{font-family:"JetBrains Mono";font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px}
 .ba .in .label{color:var(--dim)}
 .ba .out .label{color:var(--accent)}
+.ba .out{border-color:rgba(198,242,78,.5);box-shadow:0 24px 64px -30px rgba(198,242,78,.28)}
 .ba ul{list-style:none}
 .ba li{padding:9px 0;border-bottom:1px solid var(--line);font-size:15.5px;display:flex;gap:10px;align-items:baseline}
 .ba li:last-child{border-bottom:none}
@@ -259,22 +258,19 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
     <h2 class="h2">Keilausdata on raakaa. Mallin pitää olla puhdas.</h2>
     <p class="lead">Laserkeilain antaa kymmeniä miljoonia pisteitä — kaiken, mitä huoneessa sattui olemaan. Mallintaja käyttää tuntikausia piirtäessään käsin seiniä pistesumun päälle. scan2bim hoitaa raskaan osan automaattisesti.</p>
 
-    <div class="grid grid-3">
-      <div class="card reveal">
-        <div class="ic">⏱ aika</div>
-        <h3>Tunnit minuuteiksi</h3>
+    <div class="why">
+      <article class="why-item reveal">
+        <h3>Tunnit <em>minuuteiksi</em></h3>
         <p>Käsin jäljittämisen sijaan ajat yhden komennon. Geometria johdetaan suoraan datasta — toistettavasti ja deterministisesti.</p>
-      </div>
-      <div class="card reveal">
-        <div class="ic">◎ tarkkuus</div>
-        <h3>Mitattu, ei arvattu</h3>
-        <p>Seinän paksuus, korkeus ja sijainti tulevat itse pisteistä. Jokainen elementti kantaa confidence-arvon ja poikkeama-analyysi kertoo, kuinka hyvin malli istuu pilveen.</p>
-      </div>
-      <div class="card reveal">
-        <div class="ic">⇄ yhteensopiva</div>
-        <h3>Suoraan työkaluihisi</h3>
+      </article>
+      <article class="why-item reveal">
+        <h3>Mitattu, <em>ei arvattu</em></h3>
+        <p>Seinän paksuus, korkeus ja sijainti tulevat itse pisteistä. Jokainen elementti kantaa confidence-arvon, ja poikkeama-analyysi kertoo kuinka hyvin malli istuu pilveen.</p>
+      </article>
+      <article class="why-item reveal">
+        <h3>Suoraan <em>työkaluihisi</em></h3>
         <p>IFC2X3 avautuu Solibrissa ja Revitissä, DXF AutoCADissa. Ovet ja ikkunat ovat oikeita IfcDoor/IfcWindow-objekteja — eivät pelkkiä reikiä.</p>
-      </div>
+      </article>
     </div>
 
     <div class="ba reveal">
