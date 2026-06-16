@@ -102,18 +102,14 @@ header h1 em{font-style:normal;color:var(--accent);position:relative}
 .btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
 .btn:active{transform:translateY(0)}
 
-/* pipeline strip in hero */
+/* pipeline overview strip in hero — at-a-glance shape; detail lives in "Miten" */
 .flow{
-  margin-top:64px;display:grid;grid-template-columns:repeat(5,1fr);gap:0;
-  border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--bg-2)
+  margin-top:56px;display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;
+  border:1px solid var(--line);border-radius:var(--r);background:var(--bg-2);padding:20px 24px
 }
-.flow .step{padding:22px 18px;border-right:1px solid var(--line);position:relative}
-.flow .step:last-child{border-right:none}
-.flow .n{font-family:"JetBrains Mono";font-size:12px;color:var(--accent-2)}
-.flow .t{font-family:"Bricolage Grotesque";font-weight:600;font-size:18px;margin-top:8px}
-.flow .d{font-size:13.5px;color:var(--dim);margin-top:5px;line-height:1.45}
-.flow .step:not(:last-child)::after{content:"→";position:absolute;right:-9px;top:50%;transform:translateY(-50%);color:var(--accent);background:var(--bg);width:18px;text-align:center;z-index:2;font-size:14px}
-@media(max-width:860px){.flow{grid-template-columns:1fr 1fr}.flow .step::after{display:none}.flow .step:last-child{grid-column:1/-1}}
+.flow .stage{font-family:"Bricolage Grotesque";font-weight:600;font-size:17px}
+.flow .arr{color:var(--accent);font-size:14px}
+@media(max-width:560px){.flow{gap:10px 12px;padding:18px}.flow .stage{font-size:15px}}
 
 /* SECTIONS */
 section{padding:84px 0;position:relative}
@@ -248,11 +244,11 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
     </div>
 
     <div class="flow reveal">
-      <div class="step"><div class="n">01</div><div class="t">Lataus</div><div class="d">E57 / LAS / LAZ / PTS — normalisointi & downsample</div></div>
-      <div class="step"><div class="n">02</div><div class="t">Segmentointi</div><div class="d">Detektorit löytävät rakenne-elementit</div></div>
-      <div class="step"><div class="n">03</div><div class="t">Semantiikka</div><div class="d">Paksuus, korkeus, tilat, confidence</div></div>
-      <div class="step"><div class="n">04</div><div class="t">Malli</div><div class="d">StructuralModel — yksi totuus</div></div>
-      <div class="step"><div class="n">05</div><div class="t">Export</div><div class="d">IFC · DXF</div></div>
+      <span class="stage">Lataus</span><span class="arr">→</span>
+      <span class="stage">Segmentointi</span><span class="arr">→</span>
+      <span class="stage">Semantiikka</span><span class="arr">→</span>
+      <span class="stage">Malli</span><span class="arr">→</span>
+      <span class="stage">Export</span>
     </div>
   </div>
 </header>
