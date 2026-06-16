@@ -16,7 +16,7 @@
   --line:#1e2a3a;
   --ink:#e6edf5;
   --muted:#8194a8;
-  --dim:#56697e;
+  --dim:#7589a0;
   --accent:#c6f24e;      /* keilaus-lime */
   --accent-2:#39d0d8;    /* point-cloud cyan */
   --warn:#ffb454;
@@ -42,7 +42,7 @@ body::before{
   opacity:.35;
   mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000 30%,transparent 75%);
 }
-h1,h2,h3,.display{font-family:"Bricolage Grotesque",sans-serif;line-height:1.04;letter-spacing:-.02em}
+h1,h2,h3,.display{font-family:"Bricolage Grotesque",sans-serif;line-height:1.04;letter-spacing:-.02em;text-wrap:balance}
 .mono{font-family:"JetBrains Mono",monospace}
 a{color:inherit;text-decoration:none}
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px;position:relative;z-index:1}
@@ -62,7 +62,18 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between;height:6
 .navlinks{display:flex;gap:30px;font-size:15px;color:var(--muted)}
 .navlinks a:hover{color:var(--ink)}
 .navlinks .mono{font-size:13px}
-@media(max-width:760px){.navlinks{display:none}}
+.navtoggle{display:none;background:none;border:1px solid var(--line);color:var(--ink);width:42px;height:38px;border-radius:9px;font-size:17px;cursor:pointer}
+.navtoggle:hover{border-color:var(--accent);color:var(--accent)}
+@media(max-width:760px){
+  .navtoggle{display:block}
+  .navlinks{display:none}
+  .navlinks.open{
+    display:flex;flex-direction:column;gap:18px;
+    position:absolute;top:66px;left:0;right:0;
+    background:rgba(10,14,20,.97);backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);padding:18px 26px
+  }
+}
 
 /* HERO */
 header{padding:96px 0 70px;position:relative}
@@ -103,7 +114,6 @@ header h1 em{font-style:normal;color:var(--accent);position:relative;white-space
 /* SECTIONS */
 section{padding:84px 0;position:relative}
 section.alt{background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.eyebrow{font-family:"JetBrains Mono";font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-2);margin-bottom:14px}
 .h2{font-size:clamp(32px,4.6vw,52px);font-weight:800;max-width:18ch}
 .lead{color:var(--muted);font-size:19px;max-width:62ch;margin-top:18px}
 
@@ -120,6 +130,16 @@ section.alt{background:var(--bg-2);border-top:1px solid var(--line);border-botto
 .card .ic{font-family:"JetBrains Mono";font-size:13px;color:var(--accent);border:1px solid var(--line);border-radius:8px;width:fit-content;padding:5px 10px;margin-bottom:18px}
 .card h3{font-size:22px;font-weight:600}
 .card p{color:var(--muted);font-size:15.5px;margin-top:10px}
+
+/* numbered step sequence (how-it-works) */
+.steps{margin-top:48px}
+.step-row{display:grid;grid-template-columns:auto 1fr;gap:28px;padding:30px 0;border-top:1px solid var(--line);align-items:start}
+.step-row:last-child{border-bottom:1px solid var(--line)}
+.step-row .num{font-family:"Bricolage Grotesque";font-weight:800;font-size:44px;color:var(--accent);line-height:.9;font-variant-numeric:tabular-nums}
+.step-row .tag-mono{font-family:"JetBrains Mono";font-size:12px;color:var(--accent-2);letter-spacing:.06em}
+.step-row h3{font-size:23px;font-weight:600;margin-top:5px}
+.step-row p{color:var(--muted);font-size:15.5px;margin-top:9px;max-width:68ch;text-wrap:pretty}
+@media(max-width:620px){.step-row{grid-template-columns:1fr;gap:6px;padding:24px 0}.step-row .num{font-size:32px}}
 
 /* before/after */
 .ba{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:48px}
@@ -189,9 +209,12 @@ details .body{padding:0 24px 24px;color:var(--muted);font-size:16px}
 footer{border-top:1px solid var(--line);padding:40px 0;color:var(--dim);font-size:14px}
 footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
 
-.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
-.reveal.show{opacity:1;transform:none}
-@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+/* Reveal enhances an already-visible default: content shows without JS;
+   the entrance only arms once JS adds .js to <html>. */
+.reveal{opacity:1;transform:none}
+.js .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+.js .reveal.show{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none;transition:none}}
 </style>
 </head>
 <body>
@@ -199,7 +222,7 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
 <nav>
   <div class="wrap">
     <div class="brand"><span class="logo"></span>scan<b>2</b>bim</div>
-    <div class="navlinks">
+    <div class="navlinks" id="navlinks">
       <a href="#miksi">Miksi</a>
       <a href="#miten">Miten toimii</a>
       <a href="#kaytto">Käyttö</a>
@@ -207,6 +230,7 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
       <a href="#faq">FAQ</a>
       <a href="https://github.com/Mcrauli/scan2bim-web/releases/latest">Lataa</a>
     </div>
+    <button class="navtoggle" aria-label="Avaa valikko" aria-expanded="false" aria-controls="navlinks">☰</button>
   </div>
 </nav>
 
@@ -232,7 +256,6 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
 
 <section id="miksi">
   <div class="wrap">
-    <div class="eyebrow">Miksi scan2bim</div>
     <h2 class="h2">Keilausdata on raakaa. Mallin pitää olla puhdas.</h2>
     <p class="lead">Laserkeilain antaa kymmeniä miljoonia pisteitä — kaiken, mitä huoneessa sattui olemaan. Mallintaja käyttää tuntikausia piirtäessään käsin seiniä pistesumun päälle. scan2bim hoitaa raskaan osan automaattisesti.</p>
 
@@ -279,22 +302,20 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
 
 <section id="miten" class="alt">
   <div class="wrap">
-    <div class="eyebrow">Miten toimii</div>
     <h2 class="h2">Viisi vaihetta, yksi totuus.</h2>
     <p class="lead">Jokainen vaihe lukee ja kirjoittaa samaa <span class="mono" style="color:var(--accent)">StructuralModel</span>-objektia. Ei globaaleja muuttujia, ei piilotettuja riippuvuuksia — kaikki export tehdään samasta lähteestä, joten tulos on jäljitettävissä.</p>
 
-    <div class="grid grid-2">
-      <div class="card reveal"><div class="ic">geometry</div><h3>1 · Lataus & esikäsittely</h3><p>E57/LAS/LAZ/PTS sisään. Koordinaatit normalisoidaan, pilvi harvennetaan voxel-ruudukolla ja kohina suodatetaan (statistical outlier + radius). Monen skannin yhdistys ICP-rekisteröinnillä.</p></div>
-      <div class="card reveal"><div class="ic">segmentation</div><h3>2 · Elementtien tunnistus</h3><p>ElementDetector-rajapinta: WallDetector, SlabDetector, ColumnDetector, BeamDetector. Seinät tasodetektiolla/2D-tiheydellä, aukot 2D-yhtenäiskomponenteilla, varjot eroteltu säde-testillä.</p></div>
-      <div class="card reveal"><div class="ic">semantics</div><h3>3 · Merkitys & laatu</h3><p>Centerline, robusti paksuus (IRLS), korkeus, tilojen johtaminen ja confidence-pisteytys. Krääsä (kalusteet/LVI) suodatetaan rakenteista pois.</p></div>
-      <div class="card reveal"><div class="ic">ifc · export</div><h3>4–5 · Vienti</h3><p>StructuralModelista kirjoitetaan IFC (ifcopenshell) ja DXF (ezdxf). Materiaalit, psetit ja monikerroksinen spatiaalihierarkia mukana. IFC avautuu suoraan Revitiin ja ArchiCADiin muokattavaksi.</p></div>
+    <div class="steps">
+      <div class="step-row reveal"><div class="num">01</div><div><span class="tag-mono">geometry</span><h3>Lataus &amp; esikäsittely</h3><p>E57/LAS/LAZ/PTS sisään. Koordinaatit normalisoidaan, pilvi harvennetaan voxel-ruudukolla ja kohina suodatetaan (statistical outlier + radius). Monen skannin yhdistys ICP-rekisteröinnillä — pisteet linjataan toisiinsa automaattisesti.</p></div></div>
+      <div class="step-row reveal"><div class="num">02</div><div><span class="tag-mono">segmentation</span><h3>Elementtien tunnistus</h3><p>ElementDetector-rajapinta: WallDetector, SlabDetector, ColumnDetector, BeamDetector. Seinät tasodetektiolla ja 2D-tiheydellä, oviaukot seinäpinnan reikinä, varjot eroteltu skannerin sädetestillä.</p></div></div>
+      <div class="step-row reveal"><div class="num">03</div><div><span class="tag-mono">semantics</span><h3>Merkitys &amp; laatu</h3><p>Keskilinja, robusti paksuus (IRLS), korkeus, tilojen johtaminen ja confidence-pisteytys. Kalusteet ja LVI suodatetaan rakenteista pois, jää pelkkä runko.</p></div></div>
+      <div class="step-row reveal"><div class="num">04</div><div><span class="tag-mono">ifc · export</span><h3>Vienti</h3><p>StructuralModelista kirjoitetaan IFC (ifcopenshell) ja DXF (ezdxf). Materiaalit, psetit ja monikerroksinen spatiaalihierarkia mukana. IFC avautuu suoraan Revitiin ja ArchiCADiin muokattavaksi.</p></div></div>
     </div>
   </div>
 </section>
 
 <section id="kaytto">
   <div class="wrap">
-    <div class="eyebrow">Käyttö</div>
     <h2 class="h2">Asenna ja aja — ei Pythonia tarvita.</h2>
     <p class="lead">Helpoin tapa: lataa Windows-asennusohjelma. Tuplaklikkaa, ja sovellus on valmis. Päivitykset tulevat automaattisesti — kun uusi versio julkaistaan, sovellus tarjoaa sen käynnistyessä.</p>
 
@@ -344,7 +365,6 @@ scan2bim <span class="p">batch</span> data/raw/ output/</pre>
         <tr><td><span class="mono">--detector</span></td><td><span class="mono">normals</span></td><td>Seinädetektori: <span class="mono">normals</span> · <span class="mono">ransac</span> · <span class="mono">density</span> · <span class="mono">floorplan</span>.</td></tr>
         <tr><td><span class="mono">--no-ifc</span></td><td>—</td><td>Ohita IFC-vienti.</td></tr>
         <tr><td><span class="mono">--no-dxf</span></td><td>—</td><td>Ohita DXF-vienti.</td></tr>
-        <tr><td><span class="mono">--no-lsp</span></td><td>—</td><td>Ohita AutoLISP-vienti.</td></tr>
       </tbody>
     </table>
   </div>
@@ -352,8 +372,7 @@ scan2bim <span class="p">batch</span> data/raw/ output/</pre>
 
 <section id="tulokset" class="alt">
   <div class="wrap">
-    <div class="eyebrow">Tulokset</div>
-    <h2 class="h2">Neljä tiedostoa, suoraan tuotantoon.</h2>
+    <h2 class="h2">Kolme tiedostoa, suoraan tuotantoon.</h2>
     <p class="lead">Yksi ajo tuottaa koko paketin. Sisäinen JSON jää debuggausta varten, loput menevät suoraan suunnittelutyökaluihin.</p>
 
     <div class="outs" style="grid-template-columns:repeat(3,1fr)">
@@ -366,8 +385,7 @@ scan2bim <span class="p">batch</span> data/raw/ output/</pre>
 
 <section id="faq">
   <div class="wrap" style="max-width:820px">
-    <div class="eyebrow">Usein kysyttyä</div>
-    <h2 class="h2">FAQ</h2>
+    <h2 class="h2">Usein kysyttyä</h2>
 
     <details class="reveal"><summary>Tunnistaako se oikeasti ovet ja ikkunat automaattisesti?</summary><div class="body">Kyllä. Aukot löydetään 2D-yhtenäiskomponenteilla seinäpinnoista, ja sill-korkeus erottaa oven ikkunasta. Ne kirjoitetaan oikeina IfcDoor/IfcWindow-objekteina — psetit, mitat ja materiaalit mukana, eli Solibrissa näkyy tietoa eikä pelkkää reikää.</div></details>
 
@@ -400,8 +418,15 @@ scan2bim <span class="p">batch</span> data/raw/ output/</pre>
 </footer>
 
 <script>
+// Arm reveal animations only when JS runs — content is visible by default.
+document.documentElement.classList.add('js');
 const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('show');io.unobserve(e.target)}})},{threshold:.15});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// Mobile nav toggle.
+const tog=document.querySelector('.navtoggle'),links=document.getElementById('navlinks');
+tog.addEventListener('click',()=>{const open=links.classList.toggle('open');tog.setAttribute('aria-expanded',open)});
+links.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{links.classList.remove('open');tog.setAttribute('aria-expanded','false')}));
 </script>
 </body>
 </html>
